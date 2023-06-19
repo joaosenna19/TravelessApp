@@ -1,6 +1,59 @@
 ﻿@page "/flights"
 
-<h3>Flights</h3>
+<div class="container">
+      <div class="row my-2">
+          <h2 class="text-center">Flight Finder</h2>
+      </div>
+      <div class="row">
+          <form class="d-flex flex-row my-1">
+              <div class="input-group col mx-1 input-group-sm">
+                  <label for="from" class="input-group-text input-group-sm">From:</label>
+                  <select class="form-select" id="from">
+                      <option value="1">test</option>
+                      <option value="2">test</option>
+                  </select>
+              </div>
+              <div class="input-group col mx-1 input-group-sm">
+                  <label for="to" class="input-group-text input-group-sm">To:</label>
+                  <select class="form-select" id="to">
+                      <option value="1">test</option>
+                      <option value="2">test</option>
+                  </select>
+              </div>
+              <div class="input-group col mx-1 input-group-sm">
+                  <label for="day" class="input-group-text">Day:</label>
+                  <select class="form-select" id="day">
+                      <option value="1">test</option>
+                      <option value="2">test</option>
+                  </select>
+              </div>
+              <div class="col">
+                  <button type="button" class="btn btn-primary btn-sm w-100 btn-block">Find flights</button>
+              </div>
+          </form>
+      </div>
+      <div class="row my-2">
+          <h2 class="text-center">Flights</h2>
+      </div>
+    <div class="row my-y">
+        <select class="form-select form-select-sm col">
+            <option value="1">test</option>
+            <option value="2">test</option>
+        </select>
+    </div>
+    <div class="row my-2">
+              <h2 class="text-center">Reserve</h2>
+          </div>
+        <div class="row my-y">
+            <form class="d-flex flex-row my-1">
+                <div lass="input-group col mx-1 input-group-sm">
+                    <label for="flightcode" class="input-group-text input-group-sm">Flight Code:</label>
+                    <input id="flightcode" type="text" disabled=""/>
+                </div>
+            </form>
+            
+        </div>
+ </div>
 
 @code {
     
