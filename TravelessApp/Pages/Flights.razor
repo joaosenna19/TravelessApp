@@ -1,59 +1,98 @@
 ﻿@page "/flights"
 
-<div class="container">
+  <div class="container-fluid">
       <div class="row my-2">
-          <h2 class="text-center">Flight Finder</h2>
+        <h2 class="text-center">Flight Finder</h2>
       </div>
       <div class="row">
-          <form class="d-flex flex-row my-1">
-              <div class="input-group col mx-1 input-group-sm">
-                  <label for="from" class="input-group-text input-group-sm">From:</label>
-                  <select class="form-select" id="from">
-                      <option value="1">test</option>
-                      <option value="2">test</option>
-                  </select>
-              </div>
-              <div class="input-group col mx-1 input-group-sm">
-                  <label for="to" class="input-group-text input-group-sm">To:</label>
-                  <select class="form-select" id="to">
-                      <option value="1">test</option>
-                      <option value="2">test</option>
-                  </select>
-              </div>
-              <div class="input-group col mx-1 input-group-sm">
-                  <label for="day" class="input-group-text">Day:</label>
-                  <select class="form-select" id="day">
-                      <option value="1">test</option>
-                      <option value="2">test</option>
-                  </select>
-              </div>
-              <div class="col">
-                  <button type="button" class="btn btn-primary btn-sm w-100 btn-block">Find flights</button>
-              </div>
-          </form>
+        <form class="d-flex flex-row my-1">
+          <div class="col mx-1">
+            <label for="from" class="form-label">From:</label>
+            <select class="form-select form-select-sm" id="from">
+              <option value="1">test</option>
+              <option value="2">test</option>
+            </select>
+          </div>
+          <div class="col mx-1">
+            <label for="to" class="form-label">To:</label>
+            <select class="form-select form-select-sm" id="to">
+              <option value="1">test</option>
+              <option value="2">test</option>
+            </select>
+          </div>
+          <div class="col mx-1">
+            <label for="day" class="form-label">Day:</label>
+            <select class="form-select form-select-sm" id="day">
+              <option value="1">test</option>
+              <option value="2">test</option>
+            </select>
+          </div>
+          <div class="col align-self-end">
+            <button
+              type="button"
+              class="btn btn-primary btn-sm w-100 btn-block"
+            >
+              Find flights
+            </button>
+          </div>
+        </form>
       </div>
-      <div class="row my-2">
-          <h2 class="text-center">Flights</h2>
-      </div>
-    <div class="row my-y">
-        <select class="form-select form-select-sm col">
+
+      <!-- Flights result -->
+
+      <div>
+        <div class="row my-2">
+            <h2 class="text-center">Flight Finder</h2>
+          </div>
+        <div class="col">
+          <select class="form-select form-select-sm">
             <option value="1">test</option>
             <option value="2">test</option>
-        </select>
-    </div>
-    <div class="row my-2">
-              <h2 class="text-center">Reserve</h2>
-          </div>
-        <div class="row my-y">
-            <form class="d-flex flex-row my-1">
-                <div lass="input-group col mx-1 input-group-sm">
-                    <label for="flightcode" class="input-group-text input-group-sm">Flight Code:</label>
-                    <input id="flightcode" type="text" disabled=""/>
-                </div>
-            </form>
-            
+          </select>
         </div>
- </div>
+      </div>
+
+      <!-- Reservation form -->
+
+      <div class="row my-2">
+        <h2 class="text-center">Reserve</h2>
+      </div>
+      <div class="row my-y">
+        <form class="d-flex flex-column my-1">
+          <div class="row m-1">
+            <label for="flightcode" class="input-group-text input-group-sm form-label">Flight Code:</label>
+            <input type="text" value="Flight" class="form-control" id="flightcode" readonly>
+          </div>
+          <div class="row m-1">
+            <label for="airline" class="input-group-text input-group-sm form-label">Airline:</label>
+            <input type="text" value="Airline" class="form-control" id="airline" readonly>
+          </div>
+          <div class="row m-1">
+            <label for="day" class="input-group-text input-group-sm form-label">Day:</label>
+            <input type="text" value="Day" class="form-control" id="day" readonly>
+          </div>
+          <div class="row m-1">
+            <label for="day" class="input-group-text input-group-sm form-label">Time:</label>
+            <input type="text" value="Time" class="form-control" id="time" readonly>
+          </div>
+          <div class="row m-1">
+            <label for="cost" class="input-group-text input-group-sm form-label">Cost:</label>
+            <input type="text" value="0" class="form-control" id="cost" readonly>
+          </div>
+          <div class="row m-1">
+            <label for="name" class="input-group-text input-group-sm form-label">Name:</label>
+            <input type="text" placeholder="Name" class="form-control" id="name">
+          </div>
+          <div class="row m-1">
+            <label for="citizenship" class="input-group-text input-group-sm form-label">Citizenship:</label>
+            <input type="text" placeholder="Citizenship" class="form-control" id="citizenship">
+          </div>
+          <div class="row m-1">
+            <button class="btn btn-primary btn-sm w-100 btn-block">Reserve</button>
+          </div>
+        </form>
+      </div>
+    </div>
 
 @code {
     
