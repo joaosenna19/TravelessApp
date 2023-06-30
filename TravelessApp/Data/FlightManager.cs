@@ -5,20 +5,41 @@ namespace TravelessApp.Data;
 
 public class FlightManager
 {
-    private string FilePath { get; }
-    public List<Flight> Flights { get; }
+    private string FlightFilePath { get; }
+    private string AirportFilePath { get; }
+    public static List<Flight> Flights { get; private set; }
+    public static List<Airport> Airports { get; private set; }
+    
 
     public FlightManager()
     {
-        FilePath = Path.Combine(FileSystem.AppDataDirectory, Path.Combine("TravelessApp", "Data", "res"));;
-        Flights = createFlights();
+        FlightFilePath = Path.Combine(FileSystem.AppDataDirectory, Path.Combine("TravelessApp", "Data", "res", "flights.csv"));
+        FlightFilePath = Path.Combine(FileSystem.AppDataDirectory, Path.Combine("TravelessApp", "Data", "res", "airports.csv"));
+        createFlights();
+        createAirports();
     }
 
-    private List<Flight> createFlights()
+    private void createAirports()
     {
-        var flights = new List<Flight>();
+        
+        using var sr = new StreamReader(AirportFilePath);
+        string line;
+        while ((line = sr.ReadLine()) != null)
+        {
+            var values = line.Split(',');
+            var code = values[0];
+            var fullName = values[1];
+            
+            Airports.Add(new Airport(code, fullName));
+        }
 
-        using var sr = new StreamReader(FilePath);
+        
+    }
+
+    private void createFlights()
+    {
+        
+        using var sr = new StreamReader(FlightFilePath);
         string line;
         while ((line = sr.ReadLine()) != null)
         {
@@ -32,9 +53,7 @@ public class FlightManager
             var availableSeats = int.Parse(values[6]);
             var cost = double.Parse(values[7]);
 
-            flights.Add(new Flight(flightCode, airline, from, to, day, time, availableSeats, cost));
+            Flights.Add(new Flight(flightCode, airline, from, to, day, time, availableSeats, cost));
         }
-
-        return flights;
     }
 }
