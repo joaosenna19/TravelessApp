@@ -1,6 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TravelessApp", "TravelessApp\TravelessApp.csproj", "{910B866A-F646-49A1-859D-A9B69197BAF0}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33502.453
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TravelessApp", "TravelessApp\TravelessApp.csproj", "{910B866A-F646-49A1-859D-A9B69197BAF0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,5 +15,9 @@ Global
 		{910B866A-F646-49A1-859D-A9B69197BAF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{910B866A-F646-49A1-859D-A9B69197BAF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{910B866A-F646-49A1-859D-A9B69197BAF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{910B866A-F646-49A1-859D-A9B69197BAF0}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

@@ -1,6 +1,8 @@
 ﻿@page "/flights"
+@using TravelessApp.Data
 
-  <div class="container-fluid">
+
+<div class="container-fluid">
       <div class="row my-2">
         <h2 class="text-center">Flight Finder</h2>
       </div>
@@ -8,30 +10,35 @@
         <form class="d-flex flex-row my-1">
           <div class="col mx-1">
             <label for="from" class="form-label">From:</label>
-            <select class="form-select form-select-sm" id="from">
-              <option value="1">test</option>
-              <option value="2">test</option>
+            <select class="form-select form-select-sm" id="from"  placeholder="Choose..." @bind="origin">
+              @foreach (var airport in airports)
+              {
+                <option value="@airport.Code">@airport.Code</option>
+              }
             </select>
           </div>
           <div class="col mx-1">
             <label for="to" class="form-label">To:</label>
-            <select class="form-select form-select-sm" id="to">
-              <option value="1">test</option>
-              <option value="2">test</option>
+            <select class="form-select form-select-sm" id="to" placeholder="Choose..." @bind="destination">
+              @foreach (var airport in airports)
+              {
+                <option value="@airport.Code">@airport.Code</option>
+              }
             </select>
           </div>
           <div class="col mx-1">
             <label for="day" class="form-label">Day:</label>
-            <select class="form-select form-select-sm" id="day">
-              <option value="1">test</option>
-              <option value="2">test</option>
+            <select class="form-select form-select-sm" id="day" placeholder="Choose..." @bind="departureDate">
+              @foreach (var day in days)
+              {
+                <option value="@day">@day</option>
+              }
             </select>
           </div>
           <div class="col align-self-end">
             <button
               type="button"
-              class="btn btn-primary btn-sm w-100 btn-block"
-            >
+              class="btn btn-primary btn-sm w-100 btn-block">
               Find flights
             </button>
           </div>
@@ -68,11 +75,11 @@
             <input type="text" value="Airline" class="form-control" id="airline" readonly>
           </div>
           <div class="row m-1">
-            <label for="day" class="input-group-text input-group-sm form-label">Day:</label>
-            <input type="text" value="Day" class="form-control" id="day" readonly>
+            <label for="reserveday" class="input-group-text input-group-sm form-label">Day:</label>
+            <input type="text" value="Day" class="form-control" id="reserveday" readonly>
           </div>
           <div class="row m-1">
-            <label for="day" class="input-group-text input-group-sm form-label">Time:</label>
+            <label for="time" class="input-group-text input-group-sm form-label">Time:</label>
             <input type="text" value="Time" class="form-control" id="time" readonly>
           </div>
           <div class="row m-1">
@@ -95,5 +102,15 @@
     </div>
 
 @code {
-    
+
+  string origin;
+  string destination;
+  string departureDate;
+  
+  FlightManager flightManager = new ();
+  List<Flight> flights = FlightManager.Flights;
+  List<Airport> airports = FlightManager.Airports;
+  string[] days = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+
+
 }
