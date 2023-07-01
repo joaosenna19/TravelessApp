@@ -22,4 +22,10 @@ public class Flight
         AvailableSeats = availableSeats;
         Cost = cost;
     }
+
+    public override string ToString()
+    {
+        return
+            $"Code: {FlightCode}, Airline: {Airline} From: {From}, To: {To}, Day: {Day}";
+    }
 }
