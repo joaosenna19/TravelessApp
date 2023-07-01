@@ -21,6 +21,6 @@ public class Reservation
 
     public override string ToString()
     {
-        return $"Code: {FlightCode}, Client: {Name}";
+        return $"{FlightCode},{Name},{Citizenship},{ReservationCode},{IsActive}";
     }
 }

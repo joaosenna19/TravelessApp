@@ -2,26 +2,31 @@
 
 public class ReservationManager
 {
-    public string ReservationFilePath { get; }
-    
-    
-    public static List<Reservation> Reservations { get; private set; }
+    private static string ReservationFilePath { get; set; }
+
+
+    private static List<Reservation> Reservations = new();
     public static List<Flight> Flights { get; private set; }
 
     public ReservationManager()
     {
         Flights = FlightManager.Flights;
         ReservationFilePath = @"C:\Users\joaor\OneDrive\Desktop\Programming\C#\Projects\TravelessApp\TravelessApp\Data\res\reservations.csv";
-        Reservations = createReservations();
+        CreateReservations();
+    }
+    
+    public static List<Reservation> GetReservations()
+    {
+        return Reservations;
     }
 
-    private List<Reservation> createReservations()
+    private void CreateReservations()
     {
         var reservations = new List<Reservation>();
 
         using var sr = new StreamReader(ReservationFilePath);
         string line;
-        while ((line = sr.ReadLine()) == null)
+        while ((line = sr.ReadLine()) != null)
         {
             var values = line.Split(',');
             var flightCode = values[0];
@@ -32,24 +37,40 @@ public class ReservationManager
             
             reservations.Add(new Reservation(flightCode, name, citizenship, reservationCode, isActive));
         }
-        
-        return reservations;
+
+        Reservations = reservations;
     }
     
     public static string GenerateReservationCode()
     {
-       var random = new Random();
+        Random random = new Random();
         string reservationCode;
 
         do
         {
-            var randomNumber = random.Next(1000, 10000);
-            var randomLetter = (char)random.Next('A', 'Z' + 1);
+            int randomNumber = random.Next(1000, 10000);
+            char randomLetter = (char)random.Next('A', 'Z' + 1);
             reservationCode = $"{randomLetter}{randomNumber}";
         }
         while (Reservations.Any(reservation => reservation.ReservationCode == reservationCode));
 
         return reservationCode;
+    }
+
+
+    public static Reservation CreateNewReservation(Flight flight, string name, string citizenship, string reservationCode)
+    {
+        var newReservation = new Reservation(flight.FlightCode, name, citizenship, reservationCode, true);
+        return newReservation;
+    }
+
+    public static void WriteOnReservationFile()
+    {
+        using var wr = new StreamWriter(ReservationFilePath);
+        foreach (var reservation in Reservations)
+        {
+            wr.WriteLine(reservation);
+        }
     }
 
 }

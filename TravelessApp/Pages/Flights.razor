@@ -68,42 +68,43 @@
       <div class="row my-2">
         <h2 class="text-center">Reserve</h2>
       </div>
-      <div class="row my-y">
-        <form class="d-flex flex-column my-1">
-          <div class="row m-1">
-            <label for="flightcode" class="input-group-text input-group-sm form-label">Flight Code:</label>
-            <input type="text" value="@chosenFlight?.FlightCode" class="form-control" id="flightcode" readonly>
-          </div>
-          <div class="row m-1">
-            <label for="airline" class="input-group-text input-group-sm form-label">Airline:</label>
-            <input type="text" value="@chosenFlight?.Airline" class="form-control" id="airline" readonly placeholder="Airline">
-          </div>
-          <div class="row m-1">
-            <label for="reserveday" class="input-group-text input-group-sm form-label">Day:</label>
-            <input type="text" value="@chosenFlight?.Day" class="form-control" id="reserveday" readonly placeholder="Day">
-          </div>
-          <div class="row m-1">
-            <label for="time" class="input-group-text input-group-sm form-label">Time:</label>
-            <input type="text" value="@chosenFlight?.Time" class="form-control" id="time" readonly placeholder="Time">
-          </div>
-          <div class="row m-1">
-            <label for="cost" class="input-group-text input-group-sm form-label">Cost:</label>
-            <input type="text" value="@chosenFlight?.Cost" class="form-control" id="cost" readonly placeholder="Cost">
-          </div>
-          <div class="row m-1">
-            <label for="name" class="input-group-text input-group-sm form-label">Name:</label>
-            <input type="text" placeholder="Name" class="form-control" id="name" @bind="name" >
-          </div>
-          <div class="row m-1">
-            <label for="citizenship" class="input-group-text input-group-sm form-label">Citizenship:</label>
-            <input type="text" placeholder="Citizenship" class="form-control" id="citizenship" @bind="citizenship">
-          </div>
-          <div class="row m-1">
-            <button class="btn btn-primary btn-sm w-100 btn-block">Reserve</button>
-          </div>
-        </form>
-      </div>
+<div class="row my-y">
+  <form class="d-flex flex-column my-1">
+    <div class="row m-1">
+      <label for="flightcode" class="input-group-text input-group-sm form-label">Flight Code:</label>
+      <input type="text" value="@chosenFlight?.FlightCode" class="form-control" id="flightcode" readonly>
     </div>
+    <div class="row m-1">
+      <label for="airline" class="input-group-text input-group-sm form-label">Airline:</label>
+      <input type="text" value="@chosenFlight?.Airline" class="form-control" id="airline" readonly placeholder="Airline">
+    </div>
+    <div class="row m-1">
+      <label for="reserveday" class="input-group-text input-group-sm form-label">Day:</label>
+      <input type="text" value="@chosenFlight?.Day" class="form-control" id="reserveday" readonly placeholder="Day">
+    </div>
+    <div class="row m-1">
+      <label for="time" class="input-group-text input-group-sm form-label">Time:</label>
+      <input type="text" value="@chosenFlight?.Time" class="form-control" id="time" readonly placeholder="Time">
+    </div>
+    <div class="row m-1">
+      <label for="cost" class="input-group-text input-group-sm form-label">Cost:</label>
+      <input type="text" value="@chosenFlight?.Cost" class="form-control" id="cost" readonly placeholder="Cost">
+    </div>
+    <div class="row m-1">
+      <label for="name" class="input-group-text input-group-sm form-label">Name:</label>
+      <input type="text" placeholder="Name" class="form-control" id="name" @bind="name" >
+    </div>
+    <div class="row m-1">
+      <label for="citizenship" class="input-group-text input-group-sm form-label">Citizenship:</label>
+      <input type="text" placeholder="Citizenship" class="form-control" id="citizenship" @bind="citizenship">
+    </div>
+  </form>
+  <div class="row m-1">
+    <button onclick="@MakeReservation" class="btn btn-primary btn-sm w-100 btn-block">Reserve</button>
+    <div>Your reservation code: @reservationCode</div>
+  </div>
+</div>
+</div>
 
 @code {
 
@@ -113,11 +114,14 @@
   string chosenFlightCode;
   string name;
   string citizenship;
+  string reservationCode;
   
   
   FlightManager flightManager = new ();
+  ReservationManager reservationManager = new();
   List<Flight> flights = FlightManager.Flights;
   List<Airport> airports = FlightManager.Airports;
+  List<Reservation> reservations = ReservationManager.GetReservations();
   List<Flight> matchingFlights = new();
   
   string[] days = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
@@ -138,6 +142,20 @@
   {
     return flights.FirstOrDefault(flight => flight.FlightCode == chosenFlightCode);
   }
+
+
+  void MakeReservation()
+  {
+    
+    reservationCode = ReservationManager.GenerateReservationCode();
+    var reservation = ReservationManager.CreateNewReservation(chosenFlight, name, citizenship, reservationCode);
+    reservations.Add(reservation);
+    ReservationManager.WriteOnReservationFile();
+
+    name = null;
+    citizenship = null;
+  }
+  
   
 
 }

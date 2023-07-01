@@ -8,10 +8,12 @@ public class Flight
     public string To { get; set; }
     public string Day { get; set; }
     public string Time { get; set; }
-    public int AvailableSeats { get; set; }
+    public int TotalSeats { get; set; }
     public double Cost { get; set; }
 
-    public Flight(string flightCode, string airline, string from, string to, string day, string time, int availableSeats, double cost)
+    public int AvailableSits { get; set; }
+
+    public Flight(string flightCode, string airline, string from, string to, string day, string time, int totalSeats, double cost)
     {
         FlightCode = flightCode;
         Airline = airline;
@@ -19,8 +21,9 @@ public class Flight
         To = to;
         Day = day;
         Time = time;
-        AvailableSeats = availableSeats;
+        TotalSeats = totalSeats;
         Cost = cost;
+        AvailableSits = TotalSeats;
     }
 
     public override string ToString()
