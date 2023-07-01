@@ -26,6 +26,6 @@ public class Flight
     public override string ToString()
     {
         return
-            $"Code: {FlightCode}, Airline: {Airline} From: {From}, To: {To}, Day: {Day}";
+            $"Code: {FlightCode}, Airline: {Airline} From: {From}, To: {To}, Day: {Day}, Time: {Time}";
     }
 }
