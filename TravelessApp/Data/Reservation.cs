@@ -15,7 +15,7 @@ public class Reservation
     
     public string ReservationCode { get; set; }
 
-    public bool isActive { get; set; }
+    public bool IsActive { get; set; }
 
     public Reservation(string flightCode, string airline, string from, string to, string day, string time, int availableSeats, double cost, string name, string citizenship, string reservationCode, bool isActive)
     {
@@ -30,7 +30,7 @@ public class Reservation
         Name = name;
         Citizenship = citizenship;
         ReservationCode = reservationCode;
-        this.isActive = isActive;
+        IsActive = isActive;
     }
 
     public override string ToString()
