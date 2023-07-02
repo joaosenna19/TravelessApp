@@ -1,4 +1,5 @@
 ﻿@page "/reservations"
+@using TravelessApp.Data
 
  <div class="container-fluid">
       <div class="row my-2">
@@ -8,21 +9,18 @@
         <form class="d-flex flex-row my-1">
           <div class="col mx-1">
             <label for="code" class="form-label">Code:</label>
-            <input type="text" id="code" class="form-control form-control-sm">
+            <input type="text" id="code" class="form-control form-control-sm" @bind="code">
           </div>
           <div class="col mx-1">
             <label for="airline" class="form-label">Airline:</label>
-            <input type="text" id="airline" class="form-control form-control-sm">
+            <input type="text" id="airline" class="form-control form-control-sm" @bind="airline">
           </div>
           <div class="col mx-1">
             <label for="name" class="form-label">Name:</label>
-            <input type="text" id="name" class="form-control form-control-sm">
+            <input type="text" id="name" class="form-control form-control-sm" @bind="name">
           </div>
           <div class="col align-self-end">
-            <button
-              type="button"
-              class="btn btn-primary btn-sm w-100 btn-block"
-            >
+            <button type="button" class="btn btn-primary btn-sm w-100 btn-block" onclick="@SearchReservation">
               Find reservation
             </button>
           </div>
@@ -36,9 +34,12 @@
             <h2 class="text-center">Reservations</h2>
           </div>
         <div class="col">
-          <select class="form-select form-select-sm">
-            <option value="1">test</option>
-            <option value="2">test</option>
+          <select class="form-select form-select-sm" @bind="matchingReservationCode">
+            <option readonly="default">Reservations</option>
+            @foreach (var reservation in matchingReservation)
+            {
+              <option value="@reservation.ReservationCode">@reservation.ReservationCode</option>
+            }
           </select>
         </div>
       </div>
@@ -52,31 +53,49 @@
         <form class="d-flex flex-column my-1">
             <div class="row m-1">
                 <label for="reservationcode" class="input-group-text input-group-sm form-label">Reservation Code:</label>
-                <input type="text" value="Flight" class="form-control" id="reservationcode" readonly>
+                <input type="text" value="@selectedReservation?.ReservationCode" placeholder="Code" class="form-control" id="reservationcode" readonly>
             </div>
           <div class="row m-1">
             <label for="flightcode" class="input-group-text input-group-sm form-label">Flight Code:</label>
-            <input type="text" value="Flight" class="form-control" id="flightcode" readonly>
+            <input type="text" value="@selectedReservation?.FlightCode" placeholder="Flight Code" class="form-control" id="flightcode" readonly>
           </div>
           <div class="row m-1">
             <label for="airline" class="input-group-text input-group-sm form-label">Airline:</label>
-            <input type="text" value="Airline" class="form-control" id="airline" readonly>
+            <input type="text" value="@selectedReservation?.FlightAssociated.Airline" class="form-control" id="airline" readonly placeholder="Airline">
           </div>
           <div class="row m-1">
             <label for="cost" class="input-group-text input-group-sm form-label">Cost:</label>
-            <input type="text" value="0" class="form-control" id="cost" readonly>
+            <input type="text" value="@selectedReservation?.FlightAssociated.Cost" class="form-control" id="cost" readonly placeholder="0">
           </div>
           <div class="row m-1">
             <label for="name" class="input-group-text input-group-sm form-label">Name:</label>
-            <input type="text" placeholder="Name" class="form-control" id="name">
+            <input type="text" placeholder="Name" class="form-control" id="name" value="@selectedReservation?.Name">
           </div>
           <div class="row m-1">
             <label for="citizenship" class="input-group-text input-group-sm form-label">Citizenship:</label>
-            <input type="text" placeholder="Citizenship" class="form-control" id="citizenship">
+            <input type="text" placeholder="Citizenship" class="form-control" id="citizenship" value="@selectedReservation?.Citizenship">
           </div>
           <div class="row m-1">
-            <label for="active" class="input-group-text input-group-sm form-label">Status:</label>
-            <input type="text" placeholder="Active" class="form-control" id="active">
+            <label for="isActive" class="input-group-text input-group-sm form-label" @bind="updatedReservationStatus">Status:</label>
+            <select class="form-select form-select-sm">
+              @if (selectedReservation != null)
+            {
+              if (selectedReservation.IsActive)
+                {
+                  <option selected>Active</option>
+                  <option value="false">Inactive</option>
+                }
+                else
+                {
+                  <option selected>Inctive</option>
+                  <option value="true">Active</option>
+                }
+              }
+              else
+              {
+                <input type="text" placeholder="Active" class="form-control" id="isActive" readonly>
+              }
+            </select>
           </div>
           <div class="row m-1">
             <button class="btn btn-primary btn-sm w-100 btn-block">Reserve</button>
@@ -86,5 +105,45 @@
     </div>
 
 @code {
+  string code;
+  string airline;
+  string name;
+  double cost;
+  string matchingReservationCode;
+  
+
+  FlightManager flightManager = new ();
+  ReservationManager reservationManager = new();
+  List<Flight> flights = FlightManager.Flights;
+  List<Reservation> reservations = ReservationManager.Reservations;
+  List<Reservation> matchingReservation = new();
+  Reservation selectedReservation => SelectedReservation();
+
+  string updatedReservationStatus;
+
+  void SearchReservation()
+  {
+    matchingReservation.AddRange( reservations.Where(reservation => reservation.ReservationCode == code && 
+                                                            reservation.Name == name && 
+                                                            reservation.FlightAssociated.Airline == airline).ToList());
     
+    if (matchingReservation.Count == 0)
+    {
+      App.Current.MainPage.DisplayAlert("No reservation found", "Please try again.", "Close");
+    }
+    code = null;
+    airline = null;
+    name = null;
+  }
+  
+  private Reservation SelectedReservation()
+  {
+    return reservations.FirstOrDefault(reservation => reservation.ReservationCode == matchingReservationCode);
+  }
+
+  private void SaveChangesOnFile()
+  {
+    
+  }
+  
 }

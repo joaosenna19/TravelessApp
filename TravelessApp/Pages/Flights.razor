@@ -121,7 +121,7 @@
   ReservationManager reservationManager = new();
   List<Flight> flights = FlightManager.Flights;
   List<Airport> airports = FlightManager.Airports;
-  List<Reservation> reservations = ReservationManager.GetReservations();
+  List<Reservation> reservations = ReservationManager.Reservations;
   List<Flight> matchingFlights = new();
   
   string[] days = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
@@ -131,11 +131,11 @@
   void SearchFlights()
   {
     matchingFlights.Clear();
-    matchingFlights = flights
+    matchingFlights.AddRange(flights
       .Where(flight => flight.From == origin && !string.IsNullOrEmpty(origin) && 
                        flight.To == destination && !string.IsNullOrEmpty((destination)) && 
                        flight.Day == departureDate && !string.IsNullOrEmpty(departureDate))
-      .ToList();
+      .ToList());
   }
 
   Flight ChosenFlight()
@@ -146,16 +146,25 @@
 
   void MakeReservation()
   {
-    
-    reservationCode = ReservationManager.GenerateReservationCode();
-    var reservation = ReservationManager.CreateNewReservation(chosenFlight, name, citizenship, reservationCode);
-    reservations.Add(reservation);
-    ReservationManager.WriteOnReservationFile();
-
+    if (citizenship == null && name == null)
+    {
+      App.Current.MainPage.DisplayAlert("Missing fields", "Please fill all the fields before making a reservation.", "Close");
+    } else if (chosenFlightCode == null) 
+    {
+      App.Current.MainPage.DisplayAlert("No Flight chosen", "Please select a flight before making a reservation.", "Close");
+    } else if (chosenFlight.AvailableSits == 0)
+    {
+      App.Current.MainPage.DisplayAlert("No available seats", "Please select a different flight", "Close");
+    }
+    else
+    {
+      reservationCode = ReservationManager.GenerateReservationCode();
+      var reservation = ReservationManager.CreateNewReservation(chosenFlight, name, citizenship, reservationCode);
+      reservations.Add(reservation);
+      ReservationManager.WriteOnReservationFile();
+    }
     name = null;
     citizenship = null;
   }
-  
-  
 
 }

@@ -9,6 +9,8 @@ public class Reservation
     public string ReservationCode { get; set; }
 
     public bool IsActive { get; set; }
+    
+    public Flight FlightAssociated { get; set; }
 
     public Reservation(string flightCode, string name, string citizenship, string reservationCode, bool isActive)
     {
@@ -17,6 +19,7 @@ public class Reservation
         Citizenship = citizenship;
         ReservationCode = reservationCode;
         IsActive = isActive;
+        
     }
 
     public override string ToString()
