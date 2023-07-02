@@ -69,25 +69,39 @@
           </div>
           <div class="row m-1">
             <label for="name" class="input-group-text input-group-sm form-label">Name:</label>
-            <input type="text" placeholder="Name" class="form-control" id="name" value="@selectedReservation?.Name">
+            @if (selectedReservation != null)
+            {
+              <input type="text" placeholder="Name" class="form-control" id="name" @bind="selectedReservation.Name">
+            }
+            else
+            {
+              <input type="text" placeholder="Name" class="form-control" id="name" disabled>
+            }
           </div>
           <div class="row m-1">
             <label for="citizenship" class="input-group-text input-group-sm form-label">Citizenship:</label>
-            <input type="text" placeholder="Citizenship" class="form-control" id="citizenship" value="@selectedReservation?.Citizenship">
+            @if (selectedReservation != null)
+            {
+              <input type="text" placeholder="Citizenship" class="form-control" id="citizenship" @bind="selectedReservation.Citizenship">
+            }
+            else
+            {
+              <input type="text" placeholder="Citizenship" class="form-control" id="citizenship" disabled>
+            }
           </div>
           <div class="row m-1">
-            <label for="isActive" class="input-group-text input-group-sm form-label" @bind="updatedReservationStatus">Status:</label>
-            <select class="form-select form-select-sm">
+            <label for="isActive" class="input-group-text input-group-sm form-label">Status:</label>
+            <select class="form-select form-select-sm" @bind="updatedReservationStatus">
               @if (selectedReservation != null)
             {
               if (selectedReservation.IsActive)
                 {
-                  <option selected>Active</option>
+                  <option selected value="true">Active</option>
                   <option value="false">Inactive</option>
                 }
                 else
                 {
-                  <option selected>Inctive</option>
+                  <option selected value="false">Inactive</option>
                   <option value="true">Active</option>
                 }
               }
@@ -98,7 +112,7 @@
             </select>
           </div>
           <div class="row m-1">
-            <button class="btn btn-primary btn-sm w-100 btn-block">Reserve</button>
+            <button class="btn btn-primary btn-sm w-100 btn-block" type="button" onclick="@SaveChangesOnFile">Update</button>
           </div>
         </form>
       </div>
@@ -119,22 +133,34 @@
   List<Reservation> matchingReservation = new();
   Reservation selectedReservation => SelectedReservation();
 
-  string updatedReservationStatus;
+  string updatedReservationStatus = "true";
 
   void SearchReservation()
   {
-    matchingReservation.AddRange( reservations.Where(reservation => reservation.ReservationCode == code && 
-                                                            reservation.Name == name && 
-                                                            reservation.FlightAssociated.Airline == airline).ToList());
+    matchingReservation.Clear();
     
+    if (string.IsNullOrEmpty(code) && string.IsNullOrEmpty(name) && string.IsNullOrEmpty(airline))
+    {
+      matchingReservation.AddRange(reservations);
+    }
+    else
+    {
+      matchingReservation.AddRange(reservations.Where(reservation => 
+        (string.IsNullOrEmpty(code) || reservation.ReservationCode == code) &&
+        (string.IsNullOrEmpty(name) || reservation.Name == name) &&
+        (string.IsNullOrEmpty(airline) || reservation.FlightAssociated.Airline == airline)).ToList());
+    }
+
     if (matchingReservation.Count == 0)
     {
       App.Current.MainPage.DisplayAlert("No reservation found", "Please try again.", "Close");
     }
+  
     code = null;
     airline = null;
     name = null;
   }
+
   
   private Reservation SelectedReservation()
   {
@@ -143,7 +169,30 @@
 
   private void SaveChangesOnFile()
   {
-    
+    if (selectedReservation == null)
+    {
+      App.Current.MainPage.DisplayAlert("No reservation selected", "Please select a reservation first.", "Close");
+      return;
+    }
+    selectedReservation.IsActive = bool.Parse(updatedReservationStatus);
+
+    if (string.IsNullOrEmpty(selectedReservation.Citizenship) || string.IsNullOrEmpty(selectedReservation.Name))
+    {
+      App.Current.MainPage.DisplayAlert("Missing fields", "Please fill all the fields before editing a reservation.", "Close");
+    }
+    else
+    {
+      var index = reservations.FindIndex(r => r.ReservationCode == selectedReservation.ReservationCode);
+      if (index != -1)
+      {
+        reservations[index] = selectedReservation;
+      }
+      ReservationManager.WriteOnReservationFile();
+      matchingReservation.Clear();
+      matchingReservationCode = null;
+      App.Current.MainPage.DisplayAlert("Saved sucessfully", "Your changes were successfully changed!", "Close");
+    }
+
   }
   
 }
